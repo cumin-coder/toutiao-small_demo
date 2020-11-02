@@ -5,8 +5,8 @@ const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn',
   timeout: 5000,
 
-  // 定制后端返回的原始数据的处理
-  // 参数 data 就是后端返回的原始数据
+  // // 定制后端返回的原始数据的处理
+  // // 参数 data 就是后端返回的原始数据
   transformResponse: [function (data) {
     // 原始数据
     // console.log(data)

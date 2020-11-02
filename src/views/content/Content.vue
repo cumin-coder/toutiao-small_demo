@@ -102,7 +102,7 @@
             prop="address"
             label="操作">
             <template slot-scope="scope">
-              <el-button type="success" icon="el-icon-edit" circle></el-button>
+              <el-button type="success" icon="el-icon-edit" circle @click="$router.replace(`/issue?id=${scope.row.id}`)"></el-button>
               <el-button type="danger" icon="el-icon-delete" circle @click="delArticle(scope.row.id)"></el-button>
             </template>
           </el-table-column>
