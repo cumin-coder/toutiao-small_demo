@@ -1,5 +1,6 @@
 <template>
       <el-card class="box-card">
+        <h1>我是和</h1>
         <!--        -first 面包屑导航-->
         <div slot="header">
           <div slot="header">
@@ -10,14 +11,19 @@
           </div>
         </div>
         <!--        -last 面包屑导航-->
-
-<!--        表单-->
+        <!--        表单-->
         <el-form ref="form" :model="article" :rules="rules" label-width="80px">
           <el-form-item label="标题" prop="title">
-            <el-input v-model="article.title"></el-input>
+            <el-input v-model="article.title" placeholder="请输入文章标题..."></el-input>
           </el-form-item>
-          <el-form-item label="内容">
-            <el-input type="textarea" v-model="article.content"></el-input>
+          <el-form-item label="内容" prop="content">
+<!--            <el-input type="textarea" v-model="article.content"></el-input>-->
+            <el-tiptap v-model="article.content"
+                       :extensions="extensions"
+                       placeholder="请输入文章内容..."
+                       lang="zh"
+                       :height="500"
+            />
           </el-form-item>
           <el-form-item label="封面">
             <el-radio-group v-model="article.cover.type">
@@ -26,8 +32,12 @@
               <el-radio :label="3">三张</el-radio>
               <el-radio :label="-1">自动</el-radio>
             </el-radio-group>
+
+<!--           Upload-->
+            <UploadPicture></UploadPicture>
+
           </el-form-item>
-          <el-form-item label="频道">
+          <el-form-item label="频道" prop="channel_id">
             <el-select v-model="article.channel_id" placeholder="请选择频道">
               <el-option
                 v-for="channel in channels"
@@ -48,10 +58,36 @@
 </template>
 
 <script>
-import { $addArticle, $getArticle, $editArticle } from '../../api/issue'
+import { $addArticle, $getArticle, $editArticle, $upLoadPicture } from '../../api/issue'
 import { $getTextChannel } from '../../api/content'
+import UploadPicture from '../../components/uploadPicture/UploadPicture'
+import {
+  ElementTiptap,
+  // necessary extensions 必要的扩展
+  Doc,
+  Text,
+  Paragraph,
+  Heading,
+  Bold,
+  Underline,
+  Italic,
+  Strike,
+  ListItem,
+  BulletList,
+  OrderedList,
+  TextColor,
+  CodeView,
+  Fullscreen,
+  Image
+} from 'element-tiptap'
+// 富文本的样式
+import 'element-tiptap/lib/index.css'
 export default {
   name: 'Issue',
+  components: {
+    UploadPicture,
+    'el-tiptap': ElementTiptap
+  },
   data () {
     return {
       article: {
@@ -69,9 +105,41 @@ export default {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' },
           { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入描述信息', trigger: 'blur' }
+        ],
+        channel_id: [
+          { required: true, message: '请输入频道 不能为空', trigger: 'blur' }
         ]
       }, // 表单验证的规则
-      article_id: this.$route.query.id // 编辑某一个文章的 ID
+      article_id: this.$route.query.id, // 编辑某一个文章的 ID
+      extensions: [
+        new Doc(),
+        new Text(),
+        new Paragraph(),
+        new Heading({ level: 3 }),
+        new Bold({ bubble: true }),
+        new Underline({ bubble: true, menubar: false }),
+        new Italic(),
+        new Strike(),
+        new ListItem(),
+        new BulletList(),
+        new OrderedList(),
+        new TextColor(),
+        new CodeView(),
+        new Fullscreen(),
+        // 将 base64位 图片转换成 浏览器可识别的普通 url 地址
+        new Image({
+          // 默认图片会生成 base64
+          async uploadRequest (file) {
+            const fd = new FormData()
+            fd.append('image', file)
+            const result = await $upLoadPicture(fd)
+            return result.data.data.url
+          }
+        })
+      ] // 富文本的每一项，可按顺序排列
     }
   },
   methods: {
@@ -104,6 +172,8 @@ export default {
       this.channels = channels
     },
     async getEditArticleContent () {
+      // 如果参数没有 ID 表示是发表文章状态，所有不发起请求
+      if (!this.article_id) return
       const result = await $getArticle(this.article_id)
       this.article = result.data.data
     },

@@ -33,7 +33,10 @@ import {
   TableColumn,
   Pagination,
   Tag, Avatar,
-  Image, Loading
+  Image,
+  Loading,
+  Upload,
+  Dialog
 } from 'element-ui'
 
 Vue.prototype.$message = Message
@@ -72,3 +75,5 @@ Vue.use(Tag)
 Vue.use(Avatar)
 Vue.use(Image)
 Vue.use(Loading)
+Vue.use(Upload)
+Vue.use(Dialog)

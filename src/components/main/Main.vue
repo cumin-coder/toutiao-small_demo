@@ -17,7 +17,6 @@
       <el-header class="header">
         <div class="left-content">
           <i :class="[ isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold' ]" @click="isCollapse = !isCollapse"></i>
-<!--          -->
           <span>Cumin有限公司</span>
         </div>
         <div class="right-content">
