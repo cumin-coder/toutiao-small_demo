@@ -104,7 +104,7 @@ export default {
       rules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' },
-          { min: 5, max: 30, message: '长度在 5 到 30 个字符', trigger: 'blur' }
+          { min: 5, max: 100, message: '长度在 5 到 30 个字符', trigger: 'blur' }
         ],
         content: [
           { required: true, message: '请输入描述信息', trigger: 'blur' }
@@ -133,6 +133,7 @@ export default {
         new Image({
           // 默认图片会生成 base64
           async uploadRequest (file) {
+            console.log(file)
             const fd = new FormData()
             fd.append('image', file)
             const result = await $upLoadPicture(fd)
@@ -175,6 +176,7 @@ export default {
       // 如果参数没有 ID 表示是发表文章状态，所有不发起请求
       if (!this.article_id) return
       const result = await $getArticle(this.article_id)
+      console.log(result)
       this.article = result.data.data
     },
     // 编辑文章（修改）

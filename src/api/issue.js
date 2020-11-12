@@ -14,7 +14,6 @@ export const $addArticle = (data, draft) => {
 
 // 获取文章内容 （用于编辑）
 export const $getArticle = (articleId) => {
-  console.log(articleId)
   return request({
     url: `/mp/v1_0/articles/${articleId}`,
     method: 'GET'

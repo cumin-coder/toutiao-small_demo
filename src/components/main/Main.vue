@@ -44,6 +44,7 @@
 import Sidebar from '../sidebar/Sidebar'
 import { $getHeader2Name } from '../../api/login'
 import { MessageBox } from 'element-ui'
+import $globalBus from '../../utils/global-bus'
 export default {
   name: 'Main',
   components: {
@@ -58,6 +59,12 @@ export default {
   created () {
     // 请求头像和名字Header2Name
     this.getHeaderInfo()
+    // 全局事件总线
+    $globalBus.$on('user-info', (data) => {
+      console.log('user-info', data)
+      this.user.name = data.name
+      this.user.photo = data.photo
+    })
   },
   methods: {
     Logout () {

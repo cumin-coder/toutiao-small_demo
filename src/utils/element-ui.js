@@ -36,7 +36,8 @@ import {
   Image,
   Loading,
   Upload,
-  Dialog
+  Dialog,
+  RadioButton, Row, Alert
 } from 'element-ui'
 
 Vue.prototype.$message = Message
@@ -77,3 +78,7 @@ Vue.use(Image)
 Vue.use(Loading)
 Vue.use(Upload)
 Vue.use(Dialog)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
+Vue.use(Row)
+Vue.use(Alert)
