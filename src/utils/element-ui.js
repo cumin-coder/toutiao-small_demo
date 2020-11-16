@@ -37,7 +37,7 @@ import {
   Loading,
   Upload,
   Dialog,
-  RadioButton, Row, Alert
+  RadioButton, Row, Alert, Tabs, TabPane
 } from 'element-ui'
 
 Vue.prototype.$message = Message
@@ -82,3 +82,5 @@ Vue.use(RadioGroup)
 Vue.use(RadioButton)
 Vue.use(Row)
 Vue.use(Alert)
+Vue.use(Tabs)
+Vue.use(TabPane)

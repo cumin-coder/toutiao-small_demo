@@ -29,13 +29,16 @@
             <el-radio-group v-model="article.cover.type">
               <el-radio :label="0">无图</el-radio>
               <el-radio :label="1">单张</el-radio>
-              <el-radio :label="3">三张</el-radio>
-              <el-radio :label="-1">自动</el-radio>
             </el-radio-group>
 
 <!--           Upload-->
-            <UploadPicture></UploadPicture>
-
+            <UploadPicture
+              :typeCover="article.cover.type"
+              :key="index"
+              v-for="(item, index) in article.cover.type"
+              @onPushImage="onPushImage"
+            >
+            </UploadPicture>
           </el-form-item>
           <el-form-item label="频道" prop="channel_id">
             <el-select v-model="article.channel_id" placeholder="请选择频道">
@@ -95,7 +98,7 @@ export default {
         content: '', // 文章内容
         cover: {
           type: 0, // 封面类型
-          // 0-无图 1-单张 3-三张 -1-自动
+          // 0-无图 1-单张
           images: [] // 图片
         }, // 封面
         channel_id: null // 文章所属频道id
@@ -144,9 +147,14 @@ export default {
     }
   },
   methods: {
+    // 图片路径
+    onPushImage (data) {
+      this.article.cover.images.push(data)
+    },
     onArticle (draft, formRef) {
       this.$refs[formRef].validate((valid) => {
         if (valid) {
+          console.log(draft)
           // 验证通过
           // 请求数据，发布新文章
           this.addArticleRequest(draft)

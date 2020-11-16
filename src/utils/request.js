@@ -1,5 +1,7 @@
 import axios from 'axios'
 import jsonBig from 'json-bigint'
+import router from '../router'
+import { Message } from 'element-ui'
 
 const request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn',
@@ -33,6 +35,14 @@ request.interceptors.request.use((config) => {
 // 响应拦截器
 request.interceptors.response.use((response) => {
   return response
+},
+(err) => {
+  const { status } = err.response
+  if (status === 401) {
+    window.localStorage.removeItem('token')
+    router.push('/login')
+    Message.error('请求失败，状态码401')
+  }
 })
 
 export default request

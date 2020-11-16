@@ -1,18 +1,16 @@
 <template>
   <div class="container">
     <el-upload
+      v-if="typeCover > 0"
       action="#"
-      list-type="picture-card"
-      :limit="3"
-      :file-list="fileList"
+      :show-file-list="false"
+      :limit="typeCover"
       :on-progress="handlePictureCardProgress"
       :on-success="handlePictureCardSuccess"
       >
-      <i class="el-icon-plus"></i>
+      <img v-if="url.length > 0" :src="url" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
-    <el-dialog>
-      <img width="100%" :src="dialogImageUrl" alt="">
-    </el-dialog>
   </div>
 </template>
 
@@ -22,9 +20,15 @@ export default {
   name: 'UploadPicture',
   data () {
     return {
-      dialogImageUrl: '',
-      token: localStorage.getItem('token'),
-      fileList: []
+      url: ''
+    }
+  },
+  props: {
+    typeCover: {
+      type: Number,
+      default () {
+        return 0
+      }
     }
   },
   methods: {
@@ -32,11 +36,9 @@ export default {
       const formData = new FormData()
       formData.append('image', file.raw)
       const result = await $upLoadPicture(formData)
-      const { url, id } = result.data.data
-      this.fileList.push({
-        name: id,
-        url
-      })
+      const { url } = result.data.data
+      this.url = url
+      this.$emit('onPushImage', url)
     },
     handlePictureCardSuccess (file) {
       console.log(file)
